@@ -4,7 +4,7 @@
 		<meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
 		<link rel="shortcut icon" type="image/jpg" href="/favicon.jpg"/>
 		<link rel="shortcut icon" type="image/jpg" href="https://i.ytimg.com/vi/CUVWzpoBR7k/hqdefault.jpg"/>
-		<style type="text/css"  >
+		<style type="text/css">
 			body{
 				font-family:sans-serif;
 				font-size:120%;
@@ -146,14 +146,59 @@
 				}
 			}
 		</style>
-   
+		
+		<!--jQuery import -->
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		
 		<script>
+		<!--Functionality when DOM has finished loading -->
+		$(document).ready(function(){
+			
+			<!-- alert("JqueryWorking"); -->
+					
+			var ingredientsAvailableArray = []; <!-- Stores AVAILABLE ingredients that can be ordered -->
+			var ingredientsToOrderArray = [];  <!-- Stores ingredients that user WANTS to order -->
+			
+			<!--Visual effect when scrolling-->
 			$(window).scroll(function(){
 				$("#top_div").css("opacity", 1 - $(window).scrollTop() / 1200);
 				$("#normal_div").css("opacity", 0.8 + $(window).scrollTop() / 3000);
 			});
+			
+			$('#orderButton').click(function(){<!--When pressed,page is scrolled down to availble ingredients allowing user to select ingredients-->
+				scrollToAnchor("scrollHere");<!--input: ANCHOR's name we want to go to -->
+				var x = $('#cheeseID').val();<!--Used to get the value field from a checkbox-->
+				console.log(x);
+			});
+			
+			<!--Function that SCROLLS the page to a certain ANHCOR's name e.g: "scrollHere" -->
+			function scrollToAnchor(anchorName){
+				var aTag = $("a[name='"+ anchorName +"']");
+				$('html,body').animate({scrollTop: aTag.offset().top},'slow');
+			}
+			
+			/* TODO 
+				CHECK IF INGREDIENT IS CHECKED
+					IF TRUE 
+						ADD IT TO ingredientsToOrderArray
+						CHANGE TOTAL COSE
+					ELSE
+						NOTHING
+					END IF
+					
+			function addIngredientsToOrder( ingredient ){
+				
+			}
+			
+			function ingredientChecked(){
+				if ( ('.ingredientsClass').is(':checked'){
+						
+				}
+				
+				
+			} */
+			
+		}); <!--End ready function-->
 		
 		</script>
    </head>
@@ -171,8 +216,26 @@
 		</div>
 	 </div>
      <div id="normal_div">
+		<a name="scrollHere"/>
 		<span id = "greet">Welcome to our Store!</span>
 		<hr id = "rule">
+		<form name="" method="" action=""> <!-- Start form NAME : "" -->
+			<table align="center" width="50%" height="30%" border="1">
+				<tr>
+					<p>Pizza Ingredients</p>
+						<td>
+							<ul>
+								<input id="tomatoID"  type="checkbox" name="tomatoBox" value="0.70">Tomato<br>
+								<p>Price:0.70$</p>
+								<input id="cheeseID" type="checkbox" name="cheeseBox" value="0.90">Cheese<br>
+								<p>Price:0.90$</p>
+							</ul>
+						</td>
+				</tr>
+			</table>
+			<p>Total cost: </p>
+			<textarea name="" placeholder="$$$" readonly="true"></textarea>
+		</form> <!-- END form NAME : "" -->
 	 </div>
 	</body>
  </html>
