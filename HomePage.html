@@ -56,7 +56,7 @@
 			}
 			#greet{
 				display:inline-block;
-				margin-top:3%;
+				margin-top:1%;
 				font-size:300%;
 				font-style: italic;
 			}
@@ -130,9 +130,35 @@
 				border-width: 0 0 1px 0; 
 				border-radius: 20px; 
 			}
+			#ingredientsTable{
+				border-style:solid;
+				border-color:#282526;
+				padding:1%;
+				margin:0 auto;
+				width:50%;
+				font-size:100%;
+				border-radius:1%;
+				background-color: #6a6265;
+				box-shadow: 10px 10px 5px rgba(13, 12, 13, 0.5);
+				margin-top:1%;
+			}
+			.prices{
+				font-size:90%;
+				margin-left:6%;
+				font-style:italic;
+			}
+			#availableIngredients{
+				font-size:120%;
+			}
 			#totalCostTextArea{ <!-- User can't drag/change the size of that textArea -->
 				resize:none;
+				font-family:sans-serif;
+				text-align:center;
+				width:12%;
+				height:5%;
+				font-size:100%;
 			}
+			
 			@media screen and (min-width: 1367px) {
 				body {
 					font-size:160%;
@@ -146,6 +172,12 @@
 				}
 				#pizzeria{
 					width:11.5%;
+				}
+				#ingredientsTable{
+					margin-top:2%;
+				}
+				#availableIngredients{
+					font-size:140%;
 				}
 			}
 		</style>
@@ -194,12 +226,12 @@
 			}
 			function disableAvailableIngredients(){ <!--Ingredients become HIDDEN,is called when DOM finishes loading -->
 				$('ul#ingredientsList input[type=checkbox]').each(function(){
-					$(this).hide();
+					$(this).attr("disabled", true);  // <----- changed hide() to attr(disabled) so that elements dont suddenly appear when clicking plain pizza and ruin the page layout
 				});
 			}
 			function enableAvailableIngredients(){<!--Ingredients are SHOWN -->
 				$('ul#ingredientsList input[type=checkbox]').each(function(){
-					$(this).show();
+					$(this).attr("disabled", false); // <----- changed show() to attr(disabled) so that elements dont suddenly appear when clicking plain pizza and ruin the page layout
 				});
 			}
 			function storeAvailableIngredientsToArray(){ <!-- Stores available ingredients in an array -->
@@ -211,6 +243,93 @@
 					console.log("Avaible ingredients are" + checkbox.attr('name') );
 				}	
 			}
+			
+			var total = 0; //total price of ingredients initialized at 0
+			
+			<!--UPON CLICKING ON TOMATO CHECKBOX-->
+			
+			$( "#tomatoID" ).on( "click", function() { //when tomato checkbox is CLICKED
+				 if($(this).prop("checked") == true){ //if checkbox IS BEING checked
+					total = parseFloat(total) + parseFloat($(this).val()); //add this ingredients price to the total price (parseFloat is needed because .val returns string)
+					total = total.toFixed(2) //this line makes total have only 2 decimal digits
+					
+				} //end if
+				else if($(this).prop("checked") == false){ //if checkbox IS BEING unchecked
+					total = total - parseFloat($(this).val());//subtract this ingredients price from the total price
+					total = total.toFixed(2)
+					
+				}// end if
+				
+				$('#totalCostTextArea').val(total + "$");
+			});
+			
+			<!--UPON CLICKING ON CHEESE CHECKBOX-->
+			
+			$( "#cheeseID" ).on( "click", function() { //when cheese checkbox is CLICKED
+				 if($(this).prop("checked") == true){ //if checkbox IS BEING checked
+					total = parseFloat(total) + parseFloat($(this).val());//add this ingredients price to the total price (parseFloat is needed because .val returns string)
+					total = total.toFixed(2);
+					
+				}
+				else if($(this).prop("checked") == false){ //if checkbox IS BEING unchecked
+					total = total - parseFloat($(this).val()); //subtract this ingredients price from the total price
+					total = total.toFixed(2)
+					
+				}
+				
+				$('#totalCostTextArea').val(total + "$"); //place total price on Total Cost textarea
+			});
+			
+			<!--UPON CLICKING ON BACON CHECKBOX-->
+			
+			$( "#baconID" ).on( "click", function() { //when bacon checkbox is CLICKED
+				 if($(this).prop("checked") == true){ //if checkbox IS BEING checked
+					total = parseFloat(total) + parseFloat($(this).val()); //add this ingredients price to the total price (parseFloat is needed because .val returns string)
+					total = total.toFixed(2);
+					
+				}
+				else if($(this).prop("checked") == false){ //if checkbox IS BEING unchecked
+					total = total - parseFloat($(this).val()); //subtract this ingredients price from the total price
+					total = total.toFixed(2)
+					
+				}
+				
+				$('#totalCostTextArea').val(total + "$"); //place total price on Total Cost textarea
+			});
+			
+			<!--UPON CLICKING ON MUSHROOMS CHECKBOX-->
+			
+			$( "#mushroomsID" ).on( "click", function() { //when mushrooms checkbox is CLICKED
+				 if($(this).prop("checked") == true){ //if checkbox IS BEING checked
+					total = parseFloat(total) + parseFloat($(this).val()); //add this ingredients price to the total price (parseFloat is needed because .val returns string)
+					total = total.toFixed(2);
+					
+				}
+				else if($(this).prop("checked") == false){ //if checkbox IS BEING unchecked
+					total = total - parseFloat($(this).val()); //subtract this ingredients price from the total price
+					total = total.toFixed(2)
+					
+				}
+				
+				$('#totalCostTextArea').val(total + "$"); //place total price on Total Cost textarea
+			});
+			
+			<!--UPON CLICKING ON PLAIN PIZZA CHECKBOX-->
+			
+			$( "#emptyPizzaId" ).on( "click", function() { //when plain pizza checkbox is CLICKED
+				 if($(this).prop("checked") == true){ //if checkbox IS BEING checked
+					total = parseFloat(total) + parseFloat($(this).val()); //add this ingredients price to the total price (parseFloat is needed because .val returns string)
+					total = total.toFixed(2);
+					
+				}
+				else if($(this).prop("checked") == false){ //if checkbox IS BEING unchecked
+					total = total - parseFloat($(this).val()); //subtract this ingredients price from the total price
+					total = total.toFixed(2)
+					
+				}
+				
+				$('#totalCostTextArea').val(total + "$"); //place total price on Total Cost textarea
+			});
 			
 		/*	
 			* 
@@ -251,30 +370,44 @@
 		<span id = "greet">Welcome to our Store!</span>
 		<hr id = "rule">
 		<form name="" method="" action=""> <!-- Start form NAME : "" -->
-			<table align="center" width="50%" height="30%" border="1">
+			<table id = "ingredientsTable">
 				<tr>
-					<p>Pizza Ingredients</p>
+					<span id = "availableIngredients">Pizza Ingredients</span>
 						<td>
+							<p>
 							<input id="emptyPizzaId" type="checkbox" name="emptyPizzaBox" value="6.50">Plain pizza<br>
-							<p>Price:6.50$</p>
+							<span class = "prices">Price: 6.50$ </span>
+							</p>
 							
 							<!--FURTHER INGRIDIENTS ADDED MUST BE INCLUDED IN ul id="ingredientsList" -->
 							<ul id="ingredientsList">
+								
+								<p>
 								<input id="tomatoID" type="checkbox" name="tomatoBox" value="0.70">Tomato<br>
-								<p>Price:0.70$</p>
+								<span class = "prices">Price: 0.70$</span>
+								</p>
+								
+								<p>
 								<input id="cheeseID" type="checkbox" name="cheeseBox" value="0.90">Cheese<br>
-								<p>Price:0.90$</p>
+								<span class = "prices">Price: 0.90$</span>
+								</p>
+								
+								<p>
 								<input id="baconID" type="checkbox" name="baconBox" value="1.10">Bacon<br>
-								<p>Price:1.10$</p>
+								<span class = "prices">Price: 1.10$</span>
+								</p>
+								
+								<p>
 								<input id="mushroomsID" type="checkbox" name="mushroomsBox" value="1.50">Mushrooms<br>
-								<p>Price:1.50$</p>
+								<span class = "prices">Price: 1.50$</span>
+								</p>
 							</ul>
 							
 						</td>
 				</tr>
 			</table>
 			<p>Total cost: </p>
-			<textarea id="totalCostTextArea" name="" draggable='false' placeholder="$$$" readonly="true"></textarea>
+			<textarea id="totalCostTextArea" name="" draggable='false' placeholder="0.00$" readonly="true" value = ""></textarea>
 		</form> <!-- END form NAME : "" -->
 	 </div>
 	</body>
