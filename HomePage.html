@@ -130,6 +130,9 @@
 				border-width: 0 0 1px 0; 
 				border-radius: 20px; 
 			}
+			#totalCostTextArea{ <!-- User can't drag/change the size of that textArea -->
+				resize:none;
+			}
 			@media screen and (min-width: 1367px) {
 				body {
 					font-size:160%;
@@ -155,9 +158,12 @@
 		$(document).ready(function(){
 			
 			<!-- alert("JqueryWorking"); -->
-					
+	
+			disableAvailableIngredients();<!--Page loads, ingredients are HIDDEN -->
+						
 			var ingredientsAvailableArray = []; <!-- Stores AVAILABLE ingredients that can be ordered -->
 			var ingredientsToOrderArray = [];  <!-- Stores ingredients that user WANTS to order -->
+			var totalCost;
 			
 			<!--Visual effect when scrolling-->
 			$(window).scroll(function(){
@@ -167,36 +173,61 @@
 			
 			$('#orderButton').click(function(){<!--When pressed,page is scrolled down to availble ingredients allowing user to select ingredients-->
 				scrollToAnchor("scrollHere");<!--input: ANCHOR's name we want to go to -->
-				var x = $('#cheeseID').val();<!--Used to get the value field from a checkbox-->
+				var x = $('#cheeseID').val();<!--Used to get the value field from a checkbox,NOT ACTUAL FUNCTIONALITY ONLY TEST-->
 				console.log(x);
 			});
 			
-			<!--Function that SCROLLS the page to a certain ANHCOR's name e.g: "scrollHere" -->
-			function scrollToAnchor(anchorName){
+			$('#emptyPizzaId').click(function(){<!--User wants to order pizza -->
+				if($('#emptyPizzaId').is(':checked')){
+					enableAvailableIngredients();
+					storeAvailableIngredientsToArray();
+				}else{
+					disableAvailableIngredients();
+					ingredientsAvailableArray = []; <!-- FLUSH array so it becomes empty again-->
+					ingredientsToOrderArray = []; <!-- FLUSH array so it becomes empty again-->
+				}
+			});
+			
+			function scrollToAnchor(anchorName){<!--Function that SCROLLS the page to a certain ANHCOR's name e.g: "scrollHere" -->
 				var aTag = $("a[name='"+ anchorName +"']");
 				$('html,body').animate({scrollTop: aTag.offset().top},'slow');
 			}
+			function disableAvailableIngredients(){ <!--Ingredients become HIDDEN,is called when DOM finishes loading -->
+				$('ul#ingredientsList input[type=checkbox]').each(function(){
+					$(this).hide();
+				});
+			}
+			function enableAvailableIngredients(){<!--Ingredients are SHOWN -->
+				$('ul#ingredientsList input[type=checkbox]').each(function(){
+					$(this).show();
+				});
+			}
+			function storeAvailableIngredientsToArray(){ <!-- Stores available ingredients in an array -->
+				var i;
+				$('ul#ingredientsList input[type=checkbox]').each(function(){ <!-- Children of ul#ingredientsList that are checkboxex are stored -->
+					ingredientsAvailableArray.push($(this));			
+				});
+				for(var checkbox of ingredientsAvailableArray){ 
+					console.log("Avaible ingredients are" + checkbox.attr('name') );
+				}	
+			}
 			
-			/* TODO 
-				CHECK IF INGREDIENT IS CHECKED
-					IF TRUE 
-						ADD IT TO ingredientsToOrderArray
-						CHANGE TOTAL COSE
-					ELSE
-						NOTHING
-					END IF
-					
-			function addIngredientsToOrder( ingredient ){
-				
+		/*	
+			* 
+			*
+		function addIngredientsToOrder( ingredient ){
+				ingredientsToOrderArra.push( ingredient );
 			}
 			
 			function ingredientChecked(){
-				if ( ('.ingredientsClass').is(':checked'){
-						
+				if('ul#ingredientsList input[type=checkbox]'.is(':checked')){
+					addIngredientsToOrder($(this));
+					console.log( checkbox.attr('name' + "is checked." ) );
 				}
-				
-				
-			} */
+			} 
+				*
+				*
+		*/
 			
 		}); <!--End ready function-->
 		
@@ -224,17 +255,26 @@
 				<tr>
 					<p>Pizza Ingredients</p>
 						<td>
-							<ul>
-								<input id="tomatoID"  type="checkbox" name="tomatoBox" value="0.70">Tomato<br>
+							<input id="emptyPizzaId" type="checkbox" name="emptyPizzaBox" value="6.50">Plain pizza<br>
+							<p>Price:6.50$</p>
+							
+							<!--FURTHER INGRIDIENTS ADDED MUST BE INCLUDED IN ul id="ingredientsList" -->
+							<ul id="ingredientsList">
+								<input id="tomatoID" type="checkbox" name="tomatoBox" value="0.70">Tomato<br>
 								<p>Price:0.70$</p>
 								<input id="cheeseID" type="checkbox" name="cheeseBox" value="0.90">Cheese<br>
 								<p>Price:0.90$</p>
+								<input id="baconID" type="checkbox" name="baconBox" value="1.10">Bacon<br>
+								<p>Price:1.10$</p>
+								<input id="mushroomsID" type="checkbox" name="mushroomsBox" value="1.50">Mushrooms<br>
+								<p>Price:1.50$</p>
 							</ul>
+							
 						</td>
 				</tr>
 			</table>
 			<p>Total cost: </p>
-			<textarea name="" placeholder="$$$" readonly="true"></textarea>
+			<textarea id="totalCostTextArea" name="" draggable='false' placeholder="$$$" readonly="true"></textarea>
 		</form> <!-- END form NAME : "" -->
 	 </div>
 	</body>
